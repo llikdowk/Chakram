@@ -4,11 +4,11 @@ using UnityEngine;
 public class TouchMockup : MonoBehaviour {
 
 	public static Touch[] touches {
-		get { return instance.hasTouch ? instance.hasTouches : instance.noTouches; }
+		get { return instance.hasTouch ? instance.withTouches : instance.noTouches; }
 	}
 
 	private readonly Touch[] noTouches = new Touch[0];
-	private readonly Touch[] hasTouches = new Touch[1];
+	private readonly Touch[] withTouches = new Touch[1];
 	private Vector3 lastMousePosition;
 	private Touch fakeTouch;
 	private bool hasTouch;
@@ -37,13 +37,15 @@ public class TouchMockup : MonoBehaviour {
 			fakeTouch.tapCount = 1;
 			lastMousePosition = Input.mousePosition;
 			hasTouch = true;
-			hasTouches[0] = fakeTouch;
+			withTouches[0] = fakeTouch;
 		}
 		else {
 			if (Input.GetMouseButtonUp(0)) {
-				fakeTouch.phase = TouchPhase.Ended;
+				withTouches[0].phase = TouchPhase.Ended;
 			}
-			hasTouch = false;
+			else {
+				hasTouch = false;
+			}
 		}
 
 	}

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Game {
 	public class Movement : MonoBehaviour {
-		public float Speed = 1.0f;
+		private const float Speed = 2.5f;
 
 		public void Update() {
 			transform.position += Vector3.down * Speed * Time.deltaTime;

@@ -1,21 +1,17 @@
-﻿using System;
-using RSG;
+﻿using Game;
 using UnityEngine;
 using UnityEngine.Rendering;
 
 public class TouchHandler : MonoBehaviour {
-	private EdgeCollider2D edgeCollider;
-	private LineRenderer lineRenderer;
-	private readonly Vector3[] line = new Vector3[2];
-	private readonly Vector2[] line2D = new Vector2[2];
-	private Touch touch = new Touch();
+	private LineRenderer line;
+	private readonly Vector3[] lineVertices3D = new Vector3[2];
+	private Touch touch;
 
 	public void Awake() {
-		edgeCollider = gameObject.AddComponent<EdgeCollider2D>();
-		lineRenderer = gameObject.AddComponent<LineRenderer>();
-		lineRenderer.receiveShadows = false;
-		lineRenderer.shadowCastingMode = ShadowCastingMode.Off;
-		lineRenderer.widthMultiplier = 0.10f;
+		line = gameObject.AddComponent<LineRenderer>();
+		line.receiveShadows = false;
+		line.shadowCastingMode = ShadowCastingMode.Off;
+		line.widthMultiplier = 0.10f;
 	}
 
 	private bool RefreshTouch() {
@@ -32,6 +28,10 @@ public class TouchHandler : MonoBehaviour {
 		touch = Input.touches[0];
 		return true;
 	#endif
+	}
+
+
+	public void Start() {
 	}
 
 	public void Update() {
@@ -63,28 +63,31 @@ public class TouchHandler : MonoBehaviour {
 	private void HandleTouch() {
 
 		if (touch.phase == TouchPhase.Began) {
-			line[0] = Camera.main.ScreenToWorldPoint(touch.position) + Vector3.forward;
-			line[1] = Camera.main.ScreenToWorldPoint(touch.position) + Vector3.forward;
+			line.enabled = true;
+			lineVertices3D[0] = Camera.main.ScreenToWorldPoint(touch.position) + Vector3.forward;
+			lineVertices3D[1] = Camera.main.ScreenToWorldPoint(touch.position) + Vector3.forward;
 		} 
 		else if (touch.phase == TouchPhase.Moved) {
-			line[1] = Camera.main.ScreenToWorldPoint(touch.position) + Vector3.forward;
+			lineVertices3D[1] = Camera.main.ScreenToWorldPoint(touch.position) + Vector3.forward;
 		}
-		/* 
 		else if (touch.phase == TouchPhase.Ended) {
-			touchPromise.Resolve();
-		} else if (touch.phase == TouchPhase.Canceled) {
-			touchPromise.Reject(new Exception("Touch cancelled"));
+			OnUpTouch();
 		}
-		*/
-		lineRenderer.SetPositions(line);
-		line2D[0] = line[0];
-		line2D[1] = line[1];
-		edgeCollider.points = line2D;
-
-		//return touchPromise;
+		else if (touch.phase == TouchPhase.Canceled) {
+			OnUpTouch();
+		}
+		
+		line.SetPositions(lineVertices3D);
 	}
 
-	private void HandleNoTouch() {
-		Debug.Log("HandleNoTouch");
+	private void OnUpTouch() {
+		Debug.Log("OnUpTouch called");
+		
+		GameObject g = new GameObject("^line");
+		var sceneLine = g.AddComponent<Line>();
+		sceneLine.Create(line);
+		sceneLine.MoveWithScene = true;
+		g.AddComponent<Movement>();
+		line.enabled = false;
 	}
 }
