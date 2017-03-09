@@ -1,6 +1,5 @@
 ﻿
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using RSG;
@@ -13,7 +12,7 @@ public class BackgroundColorManager : MonoBehaviour {
 
 	private readonly Color[][] colors = new Color[4][];
 	public int currentIndex = 0;
-	private Material[] targetMaterials;
+	private SpriteRenderer[] targetMaterials;
 	private readonly PromiseTimer promiseTimer = new PromiseTimer();
 
 	public void Awake() {
@@ -22,10 +21,7 @@ public class BackgroundColorManager : MonoBehaviour {
 		colors[2] = ColorTuple3;
 		colors[3] = ColorTuple4;
 
-		Shader bgShader = Shader.Find("Custom/UnlitTextureColor");
-		targetMaterials = transform.GetComponentsInChildren<MeshRenderer>()
-			.Where(r => r.material.shader == bgShader)
-			.Select(r => r.material).ToArray();
+		targetMaterials = transform.GetComponentsInChildren<SpriteRenderer>();
 	}
 
 	private IPromise LerpColor(Color endColor, float durationSeconds) {

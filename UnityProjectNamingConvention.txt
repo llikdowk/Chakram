@@ -1,0 +1,3 @@
+#name => used for debug purposes, can be deleted and the production game won't be affected
+_name => used for defining crucial scripting structures
+$name => used for defining placeholders
