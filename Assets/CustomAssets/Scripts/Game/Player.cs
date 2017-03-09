@@ -12,7 +12,7 @@ namespace Game {
 		}
 
 		public void Update() {
-			CheckCollision(Physics2D.OverlapCircle(transform.position, collider.radius, layerMaskAllButPlayer));
+			CheckCollision(Physics2D.OverlapCircle(transform.position, collider.radius * transform.localScale.x, layerMaskAllButPlayer));
 			
 		}
 
