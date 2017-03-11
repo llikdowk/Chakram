@@ -8,23 +8,24 @@ namespace Game {
 		public EdgeCollider2D Collider;
 		public bool MoveWithScene;
 		private readonly Vector3[] empty = new Vector3[0];
-		private readonly Vector3[] vertices = new Vector3[2];
-		private readonly Vector2[] lineVertices2D = new Vector2[2];
+		public readonly Vector3[] Vertices = new Vector3[2];
+		private readonly Vector2[] vertices2D = new Vector2[2];
 		private Vector3 lastPosition;
 
 		public void Create(LineRenderer other) {
+			gameObject.layer = LayerMaskManager.Get(Layer.Line);
 			Collider = gameObject.AddComponent<EdgeCollider2D>();
 			Renderer = gameObject.AddComponent<LineRenderer>();
 
-			other.GetPositions(vertices);
-			Renderer.SetPositions(vertices);
+			other.GetPositions(Vertices);
+			Renderer.SetPositions(Vertices);
 			Renderer.receiveShadows = false;
 			Renderer.shadowCastingMode = ShadowCastingMode.Off;
 			Renderer.widthMultiplier = 0.10f;
 
-			lineVertices2D[0] = vertices[0];
-			lineVertices2D[1] = vertices[1];
-			Collider.points = lineVertices2D;
+			vertices2D[0] = Vertices[0];
+			vertices2D[1] = Vertices[1];
+			Collider.points = vertices2D;
 		}
 
 		public void Update() {
@@ -32,10 +33,10 @@ namespace Game {
 				Vector3 deltaPosition = transform.position - lastPosition;
 				lastPosition = transform.position;
 
-				Renderer.GetPositions(vertices);
-				vertices[0] += deltaPosition;
-				vertices[1] += deltaPosition;
-				Renderer.SetPositions(vertices);
+				Renderer.GetPositions(Vertices);
+				Vertices[0] += deltaPosition;
+				Vertices[1] += deltaPosition;
+				Renderer.SetPositions(Vertices);
 
 			}
 			

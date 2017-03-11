@@ -11,7 +11,8 @@ public class BackgroundColorManager : MonoBehaviour {
 	public Color[] ColorTuple4;
 
 	private readonly Color[][] colors = new Color[4][];
-	public int currentIndex = 0;
+	public int CurrentIndex = 0;
+	public float DurationSeconds = 2.0f;
 	private SpriteRenderer[] targetMaterials;
 	private readonly PromiseTimer promiseTimer = new PromiseTimer();
 
@@ -36,8 +37,7 @@ public class BackgroundColorManager : MonoBehaviour {
 	}
 
 	private IPromise ColorCycle() {
-		const float durationSeconds = 2.0f;
-		var colorSequence = colors[currentIndex].Select(c => (Func<IPromise>)(() => LerpColor(c, durationSeconds)));
+		var colorSequence = colors[CurrentIndex].Select(c => (Func<IPromise>)(() => LerpColor(c, DurationSeconds)));
 		return Promise.Sequence(colorSequence).Then(()=>ColorCycle());
 	}
 
