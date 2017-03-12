@@ -15,18 +15,21 @@ namespace Game {
 
 		public void Update() {
 			CheckCollision(Physics2D.OverlapCircle(transform.position, collider.radius * transform.localScale.x, layerMaskAllButPlayer));
-			
+			transform.position += Vector3.up * 3.0f * Time.deltaTime;
+
 		}
 
-		//private bool first = true;
+		private bool first = true;
 		private void CheckCollision(Collider2D hitCollider) {
-			if (!hitCollider) return;
+			if (!hitCollider) {
+				first = true;
+				return;
+			}
 			if (hitCollider.gameObject.layer == lineLayer) {
 				Line line = hitCollider.gameObject.GetComponent<Line>();
 				Vector3 p = line.Vertices[0];
 				Vector3 q = line.Vertices[1];
 				Vector3 v = (q - p).normalized;
-
 				/*
 				if (first) {
 					Vector3 c = gameObject.transform.position;
@@ -41,6 +44,7 @@ namespace Game {
 
 			}
 			else {
+				first = true;
 				Debug.Log("game over");
 			}
 

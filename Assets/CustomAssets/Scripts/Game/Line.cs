@@ -4,6 +4,8 @@ using UnityEngine.Rendering;
 
 namespace Game {
 	public class Line : MonoBehaviour {
+		private static GameObject lastLine;
+
 		public LineRenderer Renderer;
 		public EdgeCollider2D Collider;
 		public bool MoveWithScene;
@@ -13,6 +15,8 @@ namespace Game {
 		private Vector3 lastPosition;
 
 		public void Create(LineRenderer other) {
+			Destroy(lastLine);
+			lastLine = gameObject;
 			gameObject.layer = LayerMaskManager.Get(Layer.Line);
 			Collider = gameObject.AddComponent<EdgeCollider2D>();
 			Renderer = gameObject.AddComponent<LineRenderer>();

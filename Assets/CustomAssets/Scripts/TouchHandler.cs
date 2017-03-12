@@ -87,7 +87,6 @@ public class TouchHandler : MonoBehaviour {
 		var sceneLine = g.AddComponent<Line>();
 		sceneLine.Create(line);
 		sceneLine.MoveWithScene = true;
-		g.AddComponent<Movement>();
 		line.enabled = false;
 	}
 }
