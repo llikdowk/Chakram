@@ -24,5 +24,9 @@ namespace CustomDebug {
 		public static void ChildObjectNotFound(DebugLog log, string childObjectName) {
 			log("Child object <b>" + childObjectName + "</b> not found in current gameObject");
 		}
+
+		public static void ResourceNotFound(DebugLog log, string resourcePath) {
+			log("Resource <b>" + resourcePath + "</b> not found");
+		}
 	}
 }

@@ -1,10 +1,12 @@
 ﻿
+using CustomDebug;
 using UnityEngine;
 using UnityEngine.Rendering;
 
 namespace Game {
 	public class Line : MonoBehaviour {
 		private static GameObject lastLine;
+		private static Material material;
 
 		public LineRenderer Renderer;
 		public EdgeCollider2D Collider;
@@ -12,6 +14,16 @@ namespace Game {
 		public readonly Vector3[] Vertices = new Vector3[2];
 		private readonly Vector2[] vertices2D = new Vector2[2];
 		private Vector3 lastPosition;
+
+		public void Awake() {
+			if (!material) {
+				const string path = "Materials/mat_lineReleased";
+				material = Resources.Load<Material>(path);
+				if (!material) {
+					DebugMsg.ResourceNotFound(Debug.LogError, path);
+				}
+			}
+		}
 
 		public void Create(LineRenderer other) {
 			Destroy(lastLine);
@@ -25,6 +37,7 @@ namespace Game {
 			Renderer.receiveShadows = false;
 			Renderer.shadowCastingMode = ShadowCastingMode.Off;
 			Renderer.widthMultiplier = 0.10f;
+			Renderer.material = material;
 
 			vertices2D[0] = Vertices[0];
 			vertices2D[1] = Vertices[1];

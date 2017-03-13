@@ -32,7 +32,7 @@ namespace Game {
 				Vector3 q = line.Vertices[1];
 				Vector3 d = q - transform.position;
 				Vector3 v = d.normalized;
-				Debug.Log(d.sqrMagnitude);
+				//Debug.Log(d.sqrMagnitude);
 				if (d.sqrMagnitude < 0.5f) {
 					return false;
 				}
