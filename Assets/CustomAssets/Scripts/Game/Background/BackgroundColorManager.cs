@@ -13,16 +13,34 @@ public class BackgroundColorManager : MonoBehaviour {
 	private readonly Color[][] colors = new Color[4][];
 	public int CurrentIndex = 0;
 	public float DurationSeconds = 2.0f;
-	private SpriteRenderer[] targetMaterials;
+	private readonly C5.ArrayList<SpriteRenderer> targetMaterials = new C5.ArrayList<SpriteRenderer>(6);
 	private readonly PromiseTimer promiseTimer = new PromiseTimer();
 
-	public void Awake() {
-		colors[0] = ColorTuple1;
-		colors[1] = ColorTuple2;
-		colors[2] = ColorTuple3;
-		colors[3] = ColorTuple4;
+	private static BackgroundColorManager instance;
 
-		targetMaterials = transform.GetComponentsInChildren<SpriteRenderer>();
+	public void Awake() {
+		if (instance == null) {
+			instance = this;
+			colors[0] = ColorTuple1;
+			colors[1] = ColorTuple2;
+			colors[2] = ColorTuple3;
+			colors[3] = ColorTuple4;
+		}
+		else {
+			Destroy(gameObject);
+		}
+	}
+
+	public static void Register(SpriteRenderer[] renderers) {
+		foreach (var r in renderers) {
+			instance.targetMaterials.Add(r);
+		}
+	}
+
+	public static void Unregister(SpriteRenderer[] renderers) {
+		foreach (var r in renderers) {
+			instance.targetMaterials.Remove(r);
+		}
 	}
 
 	private IPromise LerpColor(Color endColor, float durationSeconds) {

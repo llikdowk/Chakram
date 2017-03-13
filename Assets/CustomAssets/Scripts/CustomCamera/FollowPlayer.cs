@@ -4,7 +4,7 @@ using UnityEngine;
 namespace CustomCamera {
 	public class FollowPlayer : MonoBehaviour {
 		public Transform Player;
-		public float OffsetY = -4.8f;
+		public float OffsetY = 4.8f;
 
 		public void Update() {
 			Vector3 p = Player.transform.position;

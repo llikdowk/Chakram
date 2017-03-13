@@ -9,7 +9,6 @@ namespace Game {
 		public LineRenderer Renderer;
 		public EdgeCollider2D Collider;
 		public bool MoveWithScene;
-		private readonly Vector3[] empty = new Vector3[0];
 		public readonly Vector3[] Vertices = new Vector3[2];
 		private readonly Vector2[] vertices2D = new Vector2[2];
 		private Vector3 lastPosition;
