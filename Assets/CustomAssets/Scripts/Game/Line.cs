@@ -36,7 +36,7 @@ namespace Game {
 			Renderer.SetPositions(Vertices);
 			Renderer.receiveShadows = false;
 			Renderer.shadowCastingMode = ShadowCastingMode.Off;
-			Renderer.widthMultiplier = 0.10f;
+			Renderer.widthMultiplier = 0.50f;
 			Renderer.material = material;
 
 			vertices2D[0] = Vertices[0];

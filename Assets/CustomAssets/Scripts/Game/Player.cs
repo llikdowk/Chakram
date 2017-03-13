@@ -6,7 +6,8 @@ namespace Game {
 		private new CircleCollider2D collider;
 		private int layerMaskAllButPlayer;
 		private int lineLayer;
-		public float Speed = 4.5f;
+		public float Speed = 10.0f;
+		public float RailSpeed = 15.0f;
 
 		public void Awake() {
 			collider = GetComponent<CircleCollider2D>();
@@ -30,13 +31,13 @@ namespace Game {
 				Line line = hitCollider.gameObject.GetComponent<Line>();
 				Vector3 p = line.Vertices[0];
 				Vector3 q = line.Vertices[1];
-				Vector3 d = q - transform.position;
+				Vector3 d = q - p;//transform.position;
 				Vector3 v = d.normalized;
 				//Debug.Log(d.sqrMagnitude);
-				if (d.sqrMagnitude < 0.5f) {
+				if (d.sqrMagnitude < 0.1f) {
 					return false;
 				}
-				gameObject.transform.position += v * Time.deltaTime * 9.0f;
+				gameObject.transform.position += v * Time.deltaTime * RailSpeed;
 				return true;
 			}
 			else {

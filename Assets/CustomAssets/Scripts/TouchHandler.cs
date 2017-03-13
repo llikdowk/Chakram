@@ -20,7 +20,7 @@ public class TouchHandler : MonoBehaviour {
 		line = gameObject.AddComponent<LineRenderer>();
 		line.receiveShadows = false;
 		line.shadowCastingMode = ShadowCastingMode.Off;
-		line.widthMultiplier = 0.10f;
+		line.widthMultiplier = 0.50f;
 		line.material = material;
 	}
 
@@ -78,11 +78,7 @@ public class TouchHandler : MonoBehaviour {
 			p = new Vector3(p.x, p.y, 1.0f);
 			lineVertices3D[0] = p;
 			lineVertices3D[1] = p;
-		} 
-		else if (touch.phase == TouchPhase.Moved) {
-			Vector3 p = Camera.main.ScreenToWorldPoint(touch.position);
-			p = new Vector3(p.x, p.y, 1.0f);
-			lineVertices3D[1] = p;
+			line.SetPositions(lineVertices3D);
 		}
 		else if (touch.phase == TouchPhase.Ended) {
 			OnUpTouch();
@@ -90,8 +86,12 @@ public class TouchHandler : MonoBehaviour {
 		else if (touch.phase == TouchPhase.Canceled) {
 			OnUpTouch();
 		}
-		
-		line.SetPositions(lineVertices3D);
+		else {
+			Vector3 p = Camera.main.ScreenToWorldPoint(touch.position);
+			p = new Vector3(p.x, p.y, 1.0f);
+			lineVertices3D[1] = p;
+			line.SetPositions(lineVertices3D);
+		}
 	}
 
 	private void OnUpTouch() {

@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using RSG;
@@ -13,8 +14,20 @@ public class BackgroundColorManager : MonoBehaviour {
 	private readonly Color[][] colors = new Color[4][];
 	public int CurrentIndex = 0;
 	public float DurationSeconds = 2.0f;
-	private readonly C5.ArrayList<SpriteRenderer> targetMaterials = new C5.ArrayList<SpriteRenderer>(6);
+
+	private class SceneSprite {
+		public readonly C5.ArrayList<SpriteRenderer> Renderers = new C5.ArrayList<SpriteRenderer>();
+		public bool Destroyed;
+
+		public void AddRenderers(SpriteRenderer[] renderers) {
+			foreach (var r in renderers) {
+				Renderers.Add(r);
+			}
+		}
+	}
+	private readonly C5.ArrayList<SceneSprite> targetBlocks = new C5.ArrayList<SceneSprite>(6);
 	private readonly PromiseTimer promiseTimer = new PromiseTimer();
+	private readonly Dictionary<int, SceneSprite> map = new Dictionary<int, SceneSprite>();
 
 	private static BackgroundColorManager instance;
 
@@ -31,24 +44,26 @@ public class BackgroundColorManager : MonoBehaviour {
 		}
 	}
 
-	public static void Register(SpriteRenderer[] renderers) {
-		foreach (var r in renderers) {
-			instance.targetMaterials.Add(r);
-		}
+	public static void Register(GameObject block) {
+		var sceneSprite = new SceneSprite();
+		instance.map.Add(block.GetInstanceID(), sceneSprite);
+		sceneSprite.AddRenderers(block.GetComponentsInChildren<SpriteRenderer>());
+		instance.targetBlocks.Add(sceneSprite);
 	}
 
-	public static void Unregister(SpriteRenderer[] renderers) {
-		foreach (var r in renderers) {
-			instance.targetMaterials.Remove(r);
-		}
+	public static void Unregister(GameObject block) {
+		instance.map[block.GetInstanceID()].Destroyed = true;
 	}
 
 	private IPromise LerpColor(Color endColor, float durationSeconds) {
-		var startColor = targetMaterials.First().color;
+		//var startColor = targetBlocks.First().Renderers.First.color;
 		return promiseTimer.WaitUntil(timeData => {
 			float t = timeData.elapsedTime / durationSeconds;
-			foreach (var material in targetMaterials) {
-				material.color = Color.Lerp(startColor, endColor, t);
+			foreach (var block in targetBlocks) {
+				var startColor = block.Renderers.First.color;
+				foreach (var r in block.Renderers) {
+					r.material.color = Color.Lerp(startColor, endColor, t);
+				}
 			}
 			return t >= 1.0f;
 		});
@@ -56,7 +71,14 @@ public class BackgroundColorManager : MonoBehaviour {
 
 	private IPromise ColorCycle() {
 		var colorSequence = colors[CurrentIndex].Select(c => (Func<IPromise>)(() => LerpColor(c, DurationSeconds)));
-		return Promise.Sequence(colorSequence).Then(()=>ColorCycle());
+		return Promise.Sequence(colorSequence).
+			Then(() => {
+				foreach (var block in targetBlocks) {
+					if (block.Destroyed) {
+						targetBlocks.Remove(block);
+					}
+				}
+			}).Then(()=>ColorCycle());
 	}
 
 	public void Start() {

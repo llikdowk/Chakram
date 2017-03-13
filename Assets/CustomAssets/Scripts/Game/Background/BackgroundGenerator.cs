@@ -8,18 +8,18 @@ namespace Game.Background {
 		private readonly C5.CircularQueue<Transform> instancedPrefabs = new C5.CircularQueue<Transform>(4);
 		private int generatedCount = 0;
 		private const float offsetY = 19.2f;
+		private readonly C5.C5Random randomizer = new C5Random();
 
 		private Transform GenerateBlock() {
-			C5.C5Random randomizer = new C5Random();
-			Transform block = Object.Instantiate(blockPrefabs[randomizer.Next(0, blockPrefabs.Count-1)]);
+			Transform block = Object.Instantiate(blockPrefabs[randomizer.Next(0, blockPrefabs.Count)]);
 			block.transform.parent = transform;
 			block.transform.position = Vector3.up * generatedCount * offsetY;
-			//BackgroundColorManager.Register(block.GetComponentsInChildren<SpriteRenderer>());
+			BackgroundColorManager.Register(block.gameObject);
 			++generatedCount;
 			instancedPrefabs.Enqueue(block);
 			if (instancedPrefabs.Count == 4) {
 				Transform old = instancedPrefabs.Dequeue();
-				//BackgroundColorManager.Unregister(block.GetComponentsInChildren<SpriteRenderer>());
+				BackgroundColorManager.Unregister(block.gameObject);
 				Object.Destroy(old.gameObject);
 			}
 			return block;
@@ -33,7 +33,7 @@ namespace Game.Background {
 			GenerateBlock();
 		}
 
-		public void Update() {
+		public void FixedUpdate() {
 			if (Camera.main.transform.position.y + offsetY*1.25f> generatedCount * offsetY) {
 				GenerateBlock();
 			}
