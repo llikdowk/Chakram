@@ -10,7 +10,7 @@ namespace Game.Background {
 		private const float offsetY = 19.2f;
 		private readonly C5.C5Random randomizer = new C5Random();
 
-		private Transform GenerateBlock() {
+		private void GenerateBlock() {
 			Transform block = Object.Instantiate(blockPrefabs[randomizer.Next(0, blockPrefabs.Count)]);
 			block.transform.parent = transform;
 			block.transform.position = Vector3.up * generatedCount * offsetY;
@@ -19,10 +19,9 @@ namespace Game.Background {
 			instancedPrefabs.Enqueue(block);
 			if (instancedPrefabs.Count == 4) {
 				Transform old = instancedPrefabs.Dequeue();
-				BackgroundColorManager.Unregister(block.gameObject);
+				BackgroundColorManager.Unregister(old.gameObject);
 				Object.Destroy(old.gameObject);
 			}
-			return block;
 		}
 
 		public void Awake() {

@@ -463,7 +463,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 752715436}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b1f05abaff6da544f9f3550d55452568, type: 3}
   m_Name: 
@@ -480,8 +480,8 @@ MonoBehaviour:
   ColorTuple4:
   - {r: 0.862069, g: 1, b: 0, a: 1}
   - {r: 1, g: 0.51724136, b: 0, a: 1}
-  CurrentIndex: 0
-  DurationSeconds: 2
+  CurrentPair: 0
+  DurationSeconds: 1.25
 --- !u!114 &752715439
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -684,8 +684,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e587aa94cc2fc44a90644b686ba1631, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: 10
-  RailSpeed: 15
+  Speed: 12.5
+  RailSpeed: 17.5
 --- !u!1 &1037596412
 GameObject:
   m_ObjectHideFlags: 0
