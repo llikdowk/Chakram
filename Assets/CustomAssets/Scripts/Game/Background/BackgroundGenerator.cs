@@ -6,12 +6,18 @@ namespace Game.Background {
 	public class BackgroundGenerator : MonoBehaviour {
 		private readonly C5.ArrayList<Transform> blockPrefabs = new C5.ArrayList<Transform>();
 		private readonly C5.CircularQueue<Transform> instancedPrefabs = new C5.CircularQueue<Transform>(4);
-		private int generatedCount = 0;
+		public static int generatedCount = 0;
 		private const float offsetY = 19.2f;
 		private readonly C5.C5Random randomizer = new C5Random();
 
 		private void GenerateBlock() {
-			Transform block = Object.Instantiate(blockPrefabs[randomizer.Next(0, blockPrefabs.Count)]);
+			Transform block;
+			if (generatedCount < 1) {
+				block = Object.Instantiate(blockPrefabs[0]);
+			}
+			else {
+				block = Object.Instantiate(blockPrefabs[randomizer.Next(0, blockPrefabs.Count)]);
+			}
 			block.transform.parent = transform;
 			block.transform.position = Vector3.up * generatedCount * offsetY;
 			BackgroundColorManager.Register(block.gameObject);

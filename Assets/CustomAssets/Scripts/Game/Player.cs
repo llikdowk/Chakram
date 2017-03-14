@@ -8,11 +8,18 @@ namespace Game {
 		private int lineLayer;
 		public float Speed = 10.0f;
 		public float RailSpeed = 15.0f;
+		public static Player Instance;
 
 		public void Awake() {
-			collider = GetComponent<CircleCollider2D>();
-			layerMaskAllButPlayer = ~(1 << LayerMaskManager.Get(Layer.Player));
-			lineLayer = LayerMaskManager.Get(Layer.Line);
+			if (Instance == null) {
+				Instance = this;
+				collider = GetComponent<CircleCollider2D>();
+				layerMaskAllButPlayer = ~(1 << LayerMaskManager.Get(Layer.Player));
+				lineLayer = LayerMaskManager.Get(Layer.Line);
+			}
+			else {
+				Destroy(gameObject);
+			}
 		}
 
 		public void Update() {
