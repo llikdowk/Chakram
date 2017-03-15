@@ -13,6 +13,7 @@ namespace Game {
 		public void Awake() {
 			if (Instance == null) {
 				Instance = this;
+				UIManager ui = UIManager.Instance;
 				collider = GetComponent<CircleCollider2D>();
 				layerMaskAllButPlayer = ~(1 << LayerMaskManager.Get(Layer.Player));
 				lineLayer = LayerMaskManager.Get(Layer.Line);

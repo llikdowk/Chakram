@@ -13,7 +13,7 @@ namespace Game.Background {
 
 		private void GenerateBlock() {
 			Transform block;
-			block = new GameObject("block" + generatedCount).transform;
+			block = new GameObject("^block" + generatedCount).transform;
 			Transform bg = Object.Instantiate(bgBlockPrefabs[randomizer.Next(0, bgBlockPrefabs.Count)]);
 			bg.parent = block;
 			bg.localPosition = Vector3.zero;

@@ -10,6 +10,7 @@ namespace Game {
 			Player.Instance.transform.position = Vector3.zero;
 			BackgroundGenerator.generatedCount = 0;
 			*/
+			UIManager.Instance.Flash();
 		}
 	}
 }
