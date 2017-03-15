@@ -4,7 +4,8 @@ using UnityEngine;
 
 namespace Game.Background {
 	public class BackgroundGenerator : MonoBehaviour {
-		private readonly C5.ArrayList<Transform> blockPrefabs = new C5.ArrayList<Transform>();
+		private readonly C5.ArrayList<Transform> bgBlockPrefabs = new C5.ArrayList<Transform>();
+		private readonly C5.ArrayList<Transform> fgBlockPrefabs = new C5.ArrayList<Transform>();
 		private readonly C5.CircularQueue<Transform> instancedPrefabs = new C5.CircularQueue<Transform>(4);
 		public static int generatedCount = 0;
 		private const float offsetY = 19.2f;
@@ -12,12 +13,14 @@ namespace Game.Background {
 
 		private void GenerateBlock() {
 			Transform block;
-			if (generatedCount < 1) {
-				block = Object.Instantiate(blockPrefabs[0]);
-			}
-			else {
-				block = Object.Instantiate(blockPrefabs[randomizer.Next(0, blockPrefabs.Count)]);
-			}
+			block = new GameObject("block" + generatedCount).transform;
+			Transform bg = Object.Instantiate(bgBlockPrefabs[randomizer.Next(0, bgBlockPrefabs.Count)]);
+			bg.parent = block;
+			bg.localPosition = Vector3.zero;
+			Transform fg = Object.Instantiate(fgBlockPrefabs[randomizer.Next(0, fgBlockPrefabs.Count)]);
+			fg.parent = block;
+			fg.localPosition = Vector3.zero;
+
 			block.transform.parent = transform;
 			block.transform.position = Vector3.up * generatedCount * offsetY;
 			BackgroundColorManager.Register(block.gameObject);
@@ -31,9 +34,13 @@ namespace Game.Background {
 		}
 
 		public void Awake() {
-			Transform[] blocks = Resources.LoadAll<Transform>("Prefabs/blocks");
-			foreach (var b in blocks) {
-				blockPrefabs.Add(b);
+			Transform[] bgBlocks = Resources.LoadAll<Transform>("Prefabs/blocks/backgrounds");
+			foreach (var b in bgBlocks) {
+				bgBlockPrefabs.Add(b);
+			}
+			Transform[] fgBlocks = Resources.LoadAll<Transform>("Prefabs/blocks/foregrounds");
+			foreach (var b in fgBlocks) {
+				fgBlockPrefabs.Add(b);
 			}
 			GenerateBlock();
 		}
