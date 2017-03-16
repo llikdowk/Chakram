@@ -1,4 +1,5 @@
-﻿using RSG;
+﻿using CustomDebug;
+using RSG;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,7 +11,13 @@ public class UIManager : MonoBehaviour {
 	public static UIManager Instance {
 		get {
 			if (instance == null) {
-				instance = new GameObject("^UI").AddComponent<UIManager>();
+				var ui = GameObject.Find("$UI");
+				if (!ui) {
+					DebugMsg.GameObjectNotFound(Debug.LogError, "$UI");
+				}
+				else {
+					instance = ui.AddComponent<UIManager>();
+				}
 			}
 			return instance;
 		}
@@ -20,11 +27,11 @@ public class UIManager : MonoBehaviour {
 	public void Awake() {
 		if (instance == null) {
 			instance = this;
-			canvas = gameObject.AddComponent<Canvas>();
+			canvas = gameObject.GetComponent<Canvas>();
 			canvas.renderMode = RenderMode.ScreenSpaceCamera;
 			canvas.sortingOrder = 100;
 			canvas.worldCamera = Camera.main;
-			flash = canvas.gameObject.AddComponent<Image>();
+			flash = canvas.gameObject.GetComponent<Image>();
 			flash.enabled = false;
 		}
 		else {

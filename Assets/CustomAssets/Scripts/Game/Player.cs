@@ -24,8 +24,8 @@ namespace Game {
 			}
 		}
 
-		private const float inheritedHorizontalMultiplier = 3.0f;
-		private const float inheritedLag = 8.5f;
+		private const float inheritedHorizontalMultiplier = 10.0f;
+		private const float inheritedLag = 5.5f;
 		public void Update() {
 			if (!CheckCollision(Physics2D.OverlapCircle(transform.position, collider.radius * transform.localScale.x,
 					layerMaskAllButPlayer))) {
@@ -42,14 +42,14 @@ namespace Game {
 				Line line = hitCollider.gameObject.GetComponent<Line>();
 				Vector3 p = line.Vertices[0];
 				Vector3 q = line.Vertices[1];
-				Vector3 d = q - p;//transform.position;
-				Vector2 dplayer = transform.position - p;
+				Vector3 d = q - transform.position; // - p
 				Vector3 v = d.normalized;
 				//Debug.Log(d.sqrMagnitude);
-				if (d.sqrMagnitude < 0.1f) {
+
+				inheritedDirection = (q - p).normalized;
+				if (d.sqrMagnitude < 1.0f) {
 					return false;
 				}
-				inheritedDirection = d;
 				gameObject.transform.position += v * Time.deltaTime * RailSpeed;// + (Vector3)(dplayer);
 				return true;
 			}

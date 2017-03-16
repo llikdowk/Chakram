@@ -33,6 +33,11 @@ namespace Game {
 			Renderer = gameObject.AddComponent<LineRenderer>();
 
 			other.GetPositions(Vertices);
+			if (Vertices[0].y > Vertices[1].y) {
+				Vector3 aux = Vertices[0];
+				Vertices[0] = Vertices[1];
+				Vertices[1] = aux;
+			}
 			Renderer.SetPositions(Vertices);
 			Renderer.receiveShadows = false;
 			Renderer.shadowCastingMode = ShadowCastingMode.Off;
@@ -41,6 +46,7 @@ namespace Game {
 
 			vertices2D[0] = Vertices[0];
 			vertices2D[1] = Vertices[1];
+
 			Collider.points = vertices2D;
 		}
 

@@ -50,11 +50,13 @@ public class TouchHandler : MonoBehaviour {
 		}
 	}
 
+	/*
 	public void OnGUI() {
 		if (RefreshTouch()) {
 			ShowTouchInfo();
 		}
 	}
+	*/
 
 	private void ShowTouchInfo() {
 		var message = "";
@@ -71,7 +73,6 @@ public class TouchHandler : MonoBehaviour {
 	}
 
 	private void HandleTouch() {
-
 		if (touch.phase == TouchPhase.Began) {
 			line.enabled = true;
 			Vector3 p = Camera.main.ScreenToWorldPoint(touch.position);
