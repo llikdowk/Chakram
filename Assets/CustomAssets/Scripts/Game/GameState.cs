@@ -23,8 +23,8 @@ namespace Game {
 		public static int Score {
 			get { return score; }
 			set {
-				score = value;
-				Debug.Log(">>score= " + score);
+				score = value - 2;
+				UIManager.Instance.SetScore(score);
 			}
 		}
 

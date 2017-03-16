@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour {
 	private Canvas canvas;
 	private Image flash;
+	private Text score;
 	private readonly PromiseTimer timedPromise = new PromiseTimer();
 
 	public static UIManager Instance {
@@ -33,6 +34,7 @@ public class UIManager : MonoBehaviour {
 			canvas.worldCamera = Camera.main;
 			flash = canvas.gameObject.GetComponent<Image>();
 			flash.enabled = false;
+			score = transform.GetComponentInChildren<Text>();
 		}
 		else {
 			Destroy(gameObject);
@@ -42,6 +44,10 @@ public class UIManager : MonoBehaviour {
 	public void Flash() {
 		flash.enabled = true;
 		timedPromise.WaitFor(0.1f).Done(() => flash.enabled = false);
+	}
+
+	public void SetScore(int scoreValue) {
+		this.score.text = scoreValue.ToString();
 	}
 
 	public void Update() {
