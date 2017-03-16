@@ -1,4 +1,6 @@
-﻿using CustomDebug;
+﻿using System;
+using CustomDebug;
+using Game.Background;
 using RSG;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,6 +9,7 @@ public class UIManager : MonoBehaviour {
 	private Canvas canvas;
 	private Image flash;
 	private Text score;
+	private Text maxScore;
 	private readonly PromiseTimer timedPromise = new PromiseTimer();
 
 	public static UIManager Instance {
@@ -34,7 +37,9 @@ public class UIManager : MonoBehaviour {
 			canvas.worldCamera = Camera.main;
 			flash = canvas.gameObject.GetComponent<Image>();
 			flash.enabled = false;
-			score = transform.GetComponentInChildren<Text>();
+			score = GameObject.Find("$score").transform.GetComponentInChildren<Text>();
+			maxScore = GameObject.Find("$maxScore").transform.GetComponentInChildren<Text>();
+
 		}
 		else {
 			Destroy(gameObject);
@@ -48,6 +53,12 @@ public class UIManager : MonoBehaviour {
 
 	public void SetScore(int scoreValue) {
 		this.score.text = scoreValue.ToString();
+		int maxScoreValue;
+		Int32.TryParse(maxScore.text, out maxScoreValue);
+		if (maxScoreValue < scoreValue) {
+			BackgroundColorManager.Instance.SetHighScoreMode();
+			maxScore.text = scoreValue.ToString();
+		}
 	}
 
 	public void Update() {

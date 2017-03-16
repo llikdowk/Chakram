@@ -14,17 +14,30 @@ public class BackgroundColorManager : MonoBehaviour {
 
 	private readonly Color[][] colors = new Color[4][];
 	public int CurrentPair = 0;
+	private int lastPair = 0;
 	public float DurationSeconds = 2.0f;
+	private bool highScoreMode;
 
 	private readonly C5.IList<SpriteRenderer> targetBlocks = new C5.ArrayList<SpriteRenderer>(16);
 	private readonly PromiseTimer promiseTimer = new PromiseTimer();
+	private IPromise colorCyclePromise;
 	private readonly Dictionary<int, C5.ArrayList<SpriteRenderer>> map = new Dictionary<int, C5.ArrayList<SpriteRenderer>>();
+	public static BackgroundColorManager Instance;
 
-	private static BackgroundColorManager instance;
+	public void SetHighScoreMode() {
+		highScoreMode = true;
+		lastPair = CurrentPair;
+		CurrentPair = 3;
+	}
+
+	public void SetNormalScoreMode() {
+		CurrentPair = (++lastPair % 3);
+		highScoreMode = false;
+	}
 
 	public void Awake() {
-		if (instance == null) {
-			instance = this;
+		if (Instance == null) {
+			Instance = this;
 			colors[0] = ColorTuple1;
 			colors[1] = ColorTuple2;
 			colors[2] = ColorTuple3;
@@ -38,18 +51,18 @@ public class BackgroundColorManager : MonoBehaviour {
 	public static void Register(GameObject block) {
 		var childRenderers = block.GetComponentsInChildren<SpriteRenderer>();
 		foreach(var renderer in childRenderers) {
-			instance.targetBlocks.Add(renderer);
+			Instance.targetBlocks.Add(renderer);
 		}
-		instance.map.Add(block.GetInstanceID(), 
-			(ArrayList<SpriteRenderer>) instance.targetBlocks.View(
-				instance.targetBlocks.Count-childRenderers.Length, 
+		Instance.map.Add(block.GetInstanceID(), 
+			(ArrayList<SpriteRenderer>) Instance.targetBlocks.View(
+				Instance.targetBlocks.Count-childRenderers.Length, 
 				childRenderers.Length
 				));
 	}
 
 	public static void Unregister(GameObject block) {
-		instance.map[block.GetInstanceID()].Clear();
-		instance.map.Remove(block.GetInstanceID());
+		Instance.map[block.GetInstanceID()].Clear();
+		Instance.map.Remove(block.GetInstanceID());
 	}
 
 	private IPromise LerpColor(Color endColor, float durationSeconds) {
@@ -70,11 +83,16 @@ public class BackgroundColorManager : MonoBehaviour {
 	}
 
 	public void Start() {
-		ColorCycle().Catch(Debug.LogError);
+		colorCyclePromise = ColorCycle().Catch(Debug.LogError);
 	}
 	
 	public void Update() {
-		promiseTimer.Update(Time.deltaTime);
+		if (!highScoreMode) {
+			promiseTimer.Update(Time.deltaTime);
+		}
+		else {
+			promiseTimer.Update(Time.deltaTime * 10.0f);
+		}
 	}
 
 }

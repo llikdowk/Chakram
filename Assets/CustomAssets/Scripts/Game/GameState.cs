@@ -18,6 +18,7 @@ namespace Game {
 			playerTransform.localPosition = Vector3.zero;
 			playerTransform.parent = null;
 			BackgroundGenerator.Reset();
+			BackgroundColorManager.Instance.SetNormalScoreMode();
 		}
 
 		public static int Score {
