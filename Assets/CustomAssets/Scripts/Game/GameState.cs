@@ -37,7 +37,7 @@ namespace Game {
 			}
 		}
 
-		private static int maxScore = -1;
+		private static int maxScore = PlayerStatistics.Instance.HighScore;
 		private static int score;
 		private static bool isInHighscoreMode;
 	}
