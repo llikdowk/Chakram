@@ -1,4 +1,5 @@
 ﻿
+using Assets.CustomAssets.Scripts.Game;
 using Game.Background;
 using UnityEngine;
 
@@ -7,6 +8,11 @@ namespace Game {
 		private static readonly GameObject start = GameObject.Find("$start");
 		public static void GameOver() {
 			UIManager.Instance.Flash();
+			if (score > maxScore) {
+				maxScore = score;
+				PlayerStatistics.HighScore = maxScore;
+				UIManager.Instance.SetMaxScore(maxScore);
+			}
 			score = 0;
 			var playerTransform = Player.Instance.transform;
 			playerTransform.parent = start.transform;
@@ -14,7 +20,7 @@ namespace Game {
 			playerTransform.parent = null;
 			BackgroundGenerator.Reset();
 			BackgroundColorManager.Instance.SetNormalScoreMode();
-			UIManager.Instance.Reset();
+			isInHighscoreMode = false;
 		}
 
 		public static int Score {
@@ -22,9 +28,15 @@ namespace Game {
 			set {
 				score = value;
 				UIManager.Instance.SetScore(score);
+				if (!isInHighscoreMode && score > maxScore && maxScore != -1) {
+					BackgroundColorManager.Instance.SetHighScoreMode();
+					isInHighscoreMode = true;
+				}
 			}
 		}
 
+		private static int maxScore = -1;
 		private static int score;
+		private static bool isInHighscoreMode;
 	}
 }

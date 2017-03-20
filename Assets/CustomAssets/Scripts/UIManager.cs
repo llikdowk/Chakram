@@ -1,6 +1,5 @@
 ﻿using System;
 using CustomDebug;
-using Game.Background;
 using RSG;
 using UnityEngine;
 using UnityEngine.UI;
@@ -51,22 +50,12 @@ public class UIManager : MonoBehaviour {
 		timedPromise.WaitFor(0.1f).Done(() => flash.enabled = false);
 	}
 
-	public void Reset() {
-		isInHighscoreMode = false;
-	}
-
-	private bool isInHighscoreMode;
 	public void SetScore(int scoreValue) {
 		this.score.text = scoreValue.ToString();
-		int maxScoreValue;
-		Int32.TryParse(maxScore.text, out maxScoreValue);
-		if (maxScoreValue < scoreValue) {
-			if (!isInHighscoreMode) {
-				BackgroundColorManager.Instance.SetHighScoreMode();
-				isInHighscoreMode = true;
-			}
-			maxScore.text = scoreValue.ToString();
-		}
+	}
+
+	public void SetMaxScore(int maxScoreValue) {
+		maxScore.text = maxScoreValue.ToString();
 	}
 
 	public void Update() {
