@@ -62,7 +62,6 @@ namespace Game.Background {
 
 			var emptyBlock = Resources.Load<Transform>("Prefabs/blocks/blockEmpty");
 			MarkovChain<Transform>.Node prevRoot = fgChain.Root;
-			prevRoot.Neighbours.Add(prevRoot);
 			fgChain.Root = new MarkovChain<Transform>.Node(emptyBlock);
 			fgChain.Root.Neighbours = prevRoot.Neighbours;
 			fgChain.Current = fgChain.Root;

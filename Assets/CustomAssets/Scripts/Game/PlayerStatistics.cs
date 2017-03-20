@@ -27,6 +27,7 @@ namespace Game {
 		private int highScore = -1;
 		private readonly string[] medals = new string[5];
 		private int nextMedal = 0;
+		public int Crashes = 0;
 
 		public static PlayerStatistics Instance {
 			get {
@@ -51,16 +52,19 @@ namespace Game {
 		public void Load() {
 			nextMedal = PlayerPrefs.GetInt("NextMedal");
 			HighScore = PlayerPrefs.GetInt("HighScore");
+			Crashes = PlayerPrefs.GetInt("Crashes");
 		}
 
 		public void Save() {
 			PlayerPrefs.SetInt("NextMedal", nextMedal);
 			PlayerPrefs.SetInt("HighScore", HighScore);
+			PlayerPrefs.SetInt("Crashes", Crashes);
 		}
 
 		public void Clear() {
 			PlayerPrefs.SetInt("NextMedal", 0);
 			PlayerPrefs.SetInt("HighScore", -1);
+			PlayerPrefs.SetInt("Crashes", 0);
 		}
 
 	}

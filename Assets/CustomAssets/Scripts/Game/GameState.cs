@@ -7,6 +7,7 @@ namespace Game {
 		private static readonly GameObject start = GameObject.Find("$start");
 		public static void GameOver() {
 			UIManager.Instance.Flash();
+			++PlayerStatistics.Instance.Crashes;
 			if (score > maxScore) {
 				maxScore = score;
 				PlayerStatistics.Instance.HighScore = maxScore;

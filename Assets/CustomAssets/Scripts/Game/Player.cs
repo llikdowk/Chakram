@@ -59,7 +59,7 @@ namespace Game {
 					Vector3 v = d.normalized;
 
 					inheritedDirection = (q - p).normalized;
-					if (d.sqrMagnitude < collider.radius*collider.radius*1.1f) {
+					if (d.sqrMagnitude < collider.radius*collider.radius*1.5f) {
 						return false;
 					}
 					gameObject.transform.position += v * Time.deltaTime * RailSpeed; // + (Vector3)(dplayer);
