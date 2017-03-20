@@ -43,6 +43,7 @@ namespace Game {
 		private bool CheckCollisions(int ncol) {
 			if (ncol == 0) return false;
 
+			bool fallback = false;
 			for (int i = 0; i < ncol; ++i) {
 				Collider2D hitCollider = collisionsFound[i];
 				if (hitCollider.isTrigger) {
@@ -63,14 +64,14 @@ namespace Game {
 						return false;
 					}
 					gameObject.transform.position += v * Time.deltaTime * RailSpeed; // + (Vector3)(dplayer);
-					return true;
+					fallback = true;
 				}
 				else {
 					GameState.GameOver();
 					return false;
 				}
 			}
-			return false;
+			return fallback;
 		}
 	}
 }
