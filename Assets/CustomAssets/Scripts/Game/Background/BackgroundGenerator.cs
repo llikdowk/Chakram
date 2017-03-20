@@ -26,6 +26,7 @@ namespace Game.Background {
 			block.transform.position = Vector3.up * generatedCount * offsetY;
 			BackgroundColorManager.Register(block.gameObject);
 			++generatedCount;
+			++GameState.Score;
 			instancedBlocks.Enqueue(block);
 			if (instancedBlocks.Count == 4) {
 				Transform old = instancedBlocks.Dequeue();
@@ -35,17 +36,13 @@ namespace Game.Background {
 		}
 
 		public static void Reset() {
+			while (!instancedBlocks.IsEmpty) {
+				var b = instancedBlocks.Dequeue();
+				BackgroundColorManager.Unregister(b.gameObject);
+				Object.Destroy(b.gameObject);
+			}
 			fgChain.Current = fgChain.Root;
 			generatedCount = 0;
-		}
-
-		public static void ExitSafeZone() {
-			foreach (var block in instancedBlocks) {
-				BlockStartUtils startUtils = block.GetComponentInChildren<BlockStartUtils>();
-				if (startUtils) {
-					startUtils.DisableSecurityZone();
-				}
-			}
 		}
 
 		public void Awake() {

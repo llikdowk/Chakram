@@ -22,6 +22,7 @@ namespace Game {
 			BackgroundColorManager.Instance.SetNormalScoreMode();
 			isInHighscoreMode = false;
 			TouchHandler.Clear();
+			Player.Instance.start = true;
 		}
 
 		public static int Score {
@@ -36,7 +37,7 @@ namespace Game {
 			}
 		}
 
-		private static int maxScore;
+		private static int maxScore = -1;
 		private static int score;
 		private static bool isInHighscoreMode;
 	}

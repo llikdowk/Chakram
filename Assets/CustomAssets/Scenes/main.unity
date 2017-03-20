@@ -824,7 +824,7 @@ MonoBehaviour:
     - {r: 0.15862082, g: 1, b: 0, a: 1}
   ColorsRecordBreak:
   - {r: 1, g: 1, b: 1, a: 1}
-  - {r: 0.88235295, g: 0.88235295, b: 0.88235295, a: 1}
+  - {r: 0.7941176, g: 0.7941176, b: 0.7941176, a: 1}
   CurrentPair: []
   DurationSeconds: 1.25
 --- !u!114 &752715439
@@ -1033,6 +1033,7 @@ MonoBehaviour:
   RailSpeed: 20
   InheritedHorizontalMultiplier: 6.25
   InheritedToZeroSpeed: 3.1
+  start: 1
 --- !u!1 &1037596412
 GameObject:
   m_ObjectHideFlags: 0

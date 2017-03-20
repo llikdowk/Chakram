@@ -14,6 +14,7 @@ namespace Game {
 		private int lineLayer;
 		public static Player Instance;
 		private Vector3 inheritedDirection = Vector3.up;
+		public bool start = true;
 
 		public void Awake() {
 			if (Instance == null) {
@@ -34,8 +35,12 @@ namespace Game {
 				layerMaskAllButPlayer);
 			
 			if (!CheckCollisions(ncol)) {
-				transform.position += Vector3.up * Speed * Time.deltaTime + inheritedDirection * Time.deltaTime + Vector3.Project(inheritedDirection, Vector3.right) * InheritedHorizontalMultiplier * Time.deltaTime;
-				inheritedDirection = Vector3.Lerp(inheritedDirection, Vector3.zero, Time.deltaTime * InheritedToZeroSpeed);
+				if (!start) {
+					transform.position += Vector3.up * Speed * Time.deltaTime + inheritedDirection * Time.deltaTime +
+					                      Vector3.Project(inheritedDirection, Vector3.right) * InheritedHorizontalMultiplier *
+					                      Time.deltaTime;
+					inheritedDirection = Vector3.Lerp(inheritedDirection, Vector3.zero, Time.deltaTime * InheritedToZeroSpeed);
+				}
 			}
 
 		}
@@ -54,11 +59,12 @@ namespace Game {
 					Vector3 v = d.normalized;
 
 					inheritedDirection = (q - p).normalized;
-					if (d.sqrMagnitude < 1.0f) {
+					if (d.sqrMagnitude < collider.radius*collider.radius*1.1f) {
 						return false;
 					}
 					gameObject.transform.position += v * Time.deltaTime * RailSpeed; // + (Vector3)(dplayer);
 					fallback = true;
+					start = false;
 				}
 				else {
 					GameState.GameOver();
