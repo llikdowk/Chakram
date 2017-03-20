@@ -5,7 +5,6 @@ using UnityEngine;
 
 namespace Game.Background {
 	public class BackgroundGenerator : MonoBehaviour {
-		private static bool playerInSafeZone = true;
 		private static readonly C5.CircularQueue<Transform> instancedBlocks = new C5.CircularQueue<Transform>(4);
 		private static int generatedCount = 0;
 		private const float offsetY = 19.2f;
@@ -19,12 +18,7 @@ namespace Game.Background {
 			bg.parent = block;
 			bg.localPosition = Vector3.zero;
 			Transform fg;
-			if (playerInSafeZone) {
-				fg = Object.Instantiate(blockStart);
-			}
-			else {
-				fg = fgChain.Next();
-			}
+			fg = fgChain.Next();
 			fg.parent = block;
 			fg.localPosition = Vector3.zero;
 
@@ -32,9 +26,6 @@ namespace Game.Background {
 			block.transform.position = Vector3.up * generatedCount * offsetY;
 			BackgroundColorManager.Register(block.gameObject);
 			++generatedCount;
-			if (!playerInSafeZone) {
-				GameState.Score += 1;
-			}
 			instancedBlocks.Enqueue(block);
 			if (instancedBlocks.Count == 4) {
 				Transform old = instancedBlocks.Dequeue();
@@ -44,13 +35,11 @@ namespace Game.Background {
 		}
 
 		public static void Reset() {
-			playerInSafeZone = true;
 			fgChain.Current = fgChain.Root;
 			generatedCount = 0;
 		}
 
 		public static void ExitSafeZone() {
-			playerInSafeZone = false;
 			foreach (var block in instancedBlocks) {
 				BlockStartUtils startUtils = block.GetComponentInChildren<BlockStartUtils>();
 				if (startUtils) {
@@ -73,11 +62,12 @@ namespace Game.Background {
 			}
 
 			fgChain.ConnectAllNoCycles();
+
+			var emptyBlock = Resources.Load<Transform>("Prefabs/blocks/blockEmpty");
 			MarkovChain<Transform>.Node prevRoot = fgChain.Root;
-			blockStart = Resources.Load<Transform>("Prefabs/blocks/blockStart");
-			var firstBlock = Resources.Load<Transform>("Prefabs/blocks/foregrounds/block_fg1");
-			fgChain.Root = new MarkovChain<Transform>.Node(firstBlock);
-			fgChain.Root.Neighbours.Add(prevRoot);
+			prevRoot.Neighbours.Add(prevRoot);
+			fgChain.Root = new MarkovChain<Transform>.Node(emptyBlock);
+			fgChain.Root.Neighbours = prevRoot.Neighbours;
 			fgChain.Current = fgChain.Root;
 
 			bgChain.ConnectAll();

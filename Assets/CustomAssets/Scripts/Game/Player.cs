@@ -46,18 +46,12 @@ namespace Game {
 			bool fallback = false;
 			for (int i = 0; i < ncol; ++i) {
 				Collider2D hitCollider = collisionsFound[i];
-				if (hitCollider.isTrigger) {
-					if (hitCollider.gameObject.layer == LayerMaskManager.Get(Layer.Start)) {
-						BackgroundGenerator.ExitSafeZone();
-					}
-				}
-				else if (hitCollider.gameObject.layer == lineLayer) {
+				if (hitCollider.gameObject.layer == lineLayer) {
 					Line line = hitCollider.gameObject.GetComponent<Line>();
 					Vector3 p = line.Vertices[0];
 					Vector3 q = line.Vertices[1];
 					Vector3 d = q - transform.position; // - p
 					Vector3 v = d.normalized;
-					//Debug.Log(d.sqrMagnitude);
 
 					inheritedDirection = (q - p).normalized;
 					if (d.sqrMagnitude < 1.0f) {
