@@ -15,11 +15,11 @@ public class BackgroundColorManager : MonoBehaviour {
 
 	public ColorTuple[] Colors;
 	public Color[] ColorsRecordBreak;
+	private int colorsIndex = 0;
 
 	public Color[] CurrentPair;
 	private Color forcedColor;
 	public float DurationSeconds = 2.0f;
-	private bool highScoreMode;
 	private bool breakColorCycle;
 
 	private readonly C5.IList<SpriteRenderer> targetBlocks = new C5.ArrayList<SpriteRenderer>(16);
@@ -31,31 +31,18 @@ public class BackgroundColorManager : MonoBehaviour {
 		CurrentPair = ColorsRecordBreak;
 		forcedColor = CurrentPair[0];
 		breakColorCycle = true;
-		/*
-		highScoreMode = true;
-		lastPair = CurrentPair;
-		CurrentPair = ColorTupleRecordBreak;
-		*/
 	}
 
 	public void SetNormalScoreMode() {
-		CurrentPair = Colors.First().Tuple;
+		colorsIndex = ++colorsIndex % Colors.Length;
+		CurrentPair = Colors[colorsIndex].Tuple;
 		forcedColor = CurrentPair[0];
 		breakColorCycle = true;
-		/*
-		CurrentPair = (++lastPair % 3);
-		highScoreMode = false;
-		*/
 	}
 
 	public void Awake() {
 		if (Instance == null) {
 			Instance = this;
-			/*
-			colors[0] = ColorTuple1;
-			colors[1] = ColorTuple2;
-			colors[2] = ColorTuple3;
-			*/
 		}
 		else {
 			Destroy(gameObject);
