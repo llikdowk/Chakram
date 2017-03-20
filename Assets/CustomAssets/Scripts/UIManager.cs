@@ -51,12 +51,20 @@ public class UIManager : MonoBehaviour {
 		timedPromise.WaitFor(0.1f).Done(() => flash.enabled = false);
 	}
 
+	public void Reset() {
+		isInHighscoreMode = false;
+	}
+
+	private bool isInHighscoreMode;
 	public void SetScore(int scoreValue) {
 		this.score.text = scoreValue.ToString();
 		int maxScoreValue;
 		Int32.TryParse(maxScore.text, out maxScoreValue);
 		if (maxScoreValue < scoreValue) {
-			BackgroundColorManager.Instance.SetHighScoreMode();
+			if (!isInHighscoreMode) {
+				BackgroundColorManager.Instance.SetHighScoreMode();
+				isInHighscoreMode = true;
+			}
 			maxScore.text = scoreValue.ToString();
 		}
 	}

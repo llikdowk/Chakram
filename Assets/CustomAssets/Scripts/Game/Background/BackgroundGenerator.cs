@@ -1,11 +1,12 @@
 ﻿
 using Assets.CustomAssets.Scripts.DataStructures;
+using Game.Utils;
 using UnityEngine;
 
 namespace Game.Background {
 	public class BackgroundGenerator : MonoBehaviour {
-		public static bool PlayerInSafeZone = true;
-		private static readonly C5.CircularQueue<Transform> instancedPrefabs = new C5.CircularQueue<Transform>(4);
+		private static bool playerInSafeZone = true;
+		private static readonly C5.CircularQueue<Transform> instancedBlocks = new C5.CircularQueue<Transform>(4);
 		private static int generatedCount = 0;
 		private const float offsetY = 19.2f;
 		private static MarkovChain<Transform> fgChain;
@@ -18,7 +19,7 @@ namespace Game.Background {
 			bg.parent = block;
 			bg.localPosition = Vector3.zero;
 			Transform fg;
-			if (PlayerInSafeZone) {
+			if (playerInSafeZone) {
 				fg = Object.Instantiate(blockStart);
 			}
 			else {
@@ -31,18 +32,31 @@ namespace Game.Background {
 			block.transform.position = Vector3.up * generatedCount * offsetY;
 			BackgroundColorManager.Register(block.gameObject);
 			++generatedCount;
-			GameState.Score = generatedCount;
-			instancedPrefabs.Enqueue(block);
-			if (instancedPrefabs.Count == 4) {
-				Transform old = instancedPrefabs.Dequeue();
+			if (!playerInSafeZone) {
+				GameState.Score += 1;
+			}
+			instancedBlocks.Enqueue(block);
+			if (instancedBlocks.Count == 4) {
+				Transform old = instancedBlocks.Dequeue();
 				BackgroundColorManager.Unregister(old.gameObject);
 				Object.Destroy(old.gameObject);
 			}
 		}
 
 		public static void Reset() {
+			playerInSafeZone = true;
 			fgChain.Current = fgChain.Root;
 			generatedCount = 0;
+		}
+
+		public static void ExitSafeZone() {
+			playerInSafeZone = false;
+			foreach (var block in instancedBlocks) {
+				BlockStartUtils startUtils = block.GetComponentInChildren<BlockStartUtils>();
+				if (startUtils) {
+					startUtils.DisableSecurityZone();
+				}
+			}
 		}
 
 		public void Awake() {
@@ -61,7 +75,8 @@ namespace Game.Background {
 			fgChain.ConnectAllNoCycles();
 			MarkovChain<Transform>.Node prevRoot = fgChain.Root;
 			blockStart = Resources.Load<Transform>("Prefabs/blocks/blockStart");
-			fgChain.Root = new MarkovChain<Transform>.Node(blockStart);
+			var firstBlock = Resources.Load<Transform>("Prefabs/blocks/foregrounds/block_fg1");
+			fgChain.Root = new MarkovChain<Transform>.Node(firstBlock);
 			fgChain.Root.Neighbours.Add(prevRoot);
 			fgChain.Current = fgChain.Root;
 

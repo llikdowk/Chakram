@@ -2,46 +2,60 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using C5;
 using UnityEngine;
 using RSG;
 
-public class BackgroundColorManager : MonoBehaviour {
-	public Color[] ColorTuple1;
-	public Color[] ColorTuple2;
-	public Color[] ColorTuple3;
-	public Color[] ColorTuple4;
 
-	private readonly Color[][] colors = new Color[4][];
-	public int CurrentPair = 0;
-	private int lastPair = 0;
+public class BackgroundColorManager : MonoBehaviour {
+
+	[System.Serializable]
+	public struct ColorTuple {
+		public Color[] Tuple;
+	}
+
+	public ColorTuple[] Colors;
+	public Color[] ColorsRecordBreak;
+
+	public Color[] CurrentPair;
+	private Color forcedColor;
 	public float DurationSeconds = 2.0f;
 	private bool highScoreMode;
+	private bool breakColorCycle;
 
 	private readonly C5.IList<SpriteRenderer> targetBlocks = new C5.ArrayList<SpriteRenderer>(16);
 	private readonly PromiseTimer promiseTimer = new PromiseTimer();
-	private IPromise colorCyclePromise;
 	private readonly Dictionary<int, C5.ArrayList<SpriteRenderer>> map = new Dictionary<int, C5.ArrayList<SpriteRenderer>>();
 	public static BackgroundColorManager Instance;
 
 	public void SetHighScoreMode() {
+		CurrentPair = ColorsRecordBreak;
+		forcedColor = CurrentPair[0];
+		breakColorCycle = true;
+		/*
 		highScoreMode = true;
 		lastPair = CurrentPair;
-		CurrentPair = 3;
+		CurrentPair = ColorTupleRecordBreak;
+		*/
 	}
 
 	public void SetNormalScoreMode() {
+		CurrentPair = Colors.First().Tuple;
+		forcedColor = CurrentPair[0];
+		breakColorCycle = true;
+		/*
 		CurrentPair = (++lastPair % 3);
 		highScoreMode = false;
+		*/
 	}
 
 	public void Awake() {
 		if (Instance == null) {
 			Instance = this;
+			/*
 			colors[0] = ColorTuple1;
 			colors[1] = ColorTuple2;
 			colors[2] = ColorTuple3;
-			colors[3] = ColorTuple4;
+			*/
 		}
 		else {
 			Destroy(gameObject);
@@ -50,13 +64,18 @@ public class BackgroundColorManager : MonoBehaviour {
 
 	public static void Register(GameObject block) {
 		var childRenderers = block.GetComponentsInChildren<SpriteRenderer>();
+		int count = 0;
 		foreach(var renderer in childRenderers) {
+			if (renderer.name == "securityZone") {
+				continue;
+			}
 			Instance.targetBlocks.Add(renderer);
+			++count;
 		}
 		Instance.map.Add(block.GetInstanceID(), 
-			(ArrayList<SpriteRenderer>) Instance.targetBlocks.View(
-				Instance.targetBlocks.Count-childRenderers.Length, 
-				childRenderers.Length
+			(C5.ArrayList<SpriteRenderer>) Instance.targetBlocks.View(
+				Instance.targetBlocks.Count-count, 
+				count
 				));
 	}
 
@@ -70,29 +89,35 @@ public class BackgroundColorManager : MonoBehaviour {
 		return promiseTimer.WaitUntil(timeData => {
 			float t = timeData.elapsedTime / durationSeconds;
 			foreach (var r in targetBlocks) {
-				r.material.color = Color.Lerp(startColor, endColor, t);
+				if (!breakColorCycle) {
+					r.material.color = Color.Lerp(startColor, endColor, t);
+				}
+				else {
+					r.material.color = forcedColor;
+				}
 			}
-			return t >= 1.0f;
+			return t >= 1.0f || breakColorCycle;
 		});
 	}
 
 	private IPromise ColorCycle() {
-		var colorSequence = colors[CurrentPair]
+		var colorSequence = CurrentPair
 			.Select(c => (Func<IPromise>)(() => LerpColor(c, DurationSeconds)));
-		return Promise.Sequence(colorSequence).Then(()=>ColorCycle());
+		return Promise.Sequence(colorSequence).Then(() => {
+			if (breakColorCycle) {
+				breakColorCycle = false;
+			}
+			ColorCycle();
+		});
 	}
 
 	public void Start() {
-		colorCyclePromise = ColorCycle().Catch(Debug.LogError);
+		CurrentPair = Colors.First().Tuple;
+		ColorCycle().Catch(Debug.LogError);
 	}
 	
 	public void Update() {
-		if (!highScoreMode) {
-			promiseTimer.Update(Time.deltaTime);
-		}
-		else {
-			promiseTimer.Update(Time.deltaTime * 10.0f);
-		}
+		promiseTimer.Update(Time.deltaTime);
 	}
 
 }

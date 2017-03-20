@@ -48,7 +48,7 @@ namespace Game {
 				Collider2D hitCollider = collisionsFound[i];
 				if (hitCollider.isTrigger) {
 					if (hitCollider.gameObject.layer == LayerMaskManager.Get(Layer.Start)) {
-						BackgroundGenerator.PlayerInSafeZone = false;
+						BackgroundGenerator.ExitSafeZone();
 					}
 				}
 				else if (hitCollider.gameObject.layer == lineLayer) {

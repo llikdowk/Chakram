@@ -85,6 +85,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4788550049837928}
+  - component: {fileID: 114679923034134652}
   m_Layer: 0
   m_Name: blockStart
   m_TagString: Untagged
@@ -198,14 +199,25 @@ PolygonCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Points:
     m_Paths:
-    - - {x: 1.4161136, y: 10.344685}
+    - - {x: 2.4633687, y: 10.27779}
       - {x: 4.661005, y: 10.363071}
       - {x: 4.7188625, y: -10.39512}
-      - {x: 1.4768701, y: -10.335887}
+      - {x: 2.4414701, y: -10.180294}
     - - {x: -4.679115, y: -10.157798}
       - {x: -4.7347803, y: 9.951795}
-      - {x: -1.3443466, y: 9.993759}
-      - {x: -1.3186553, y: -9.814283}
+      - {x: -2.3757927, y: 10.231936}
+      - {x: -2.3561368, y: -10.141162}
+--- !u!114 &114679923034134652
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1810855477697432}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 014e2d04bf5057049ad1fecd67236893, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!212 &212745212890730590
 SpriteRenderer:
   m_ObjectHideFlags: 1
