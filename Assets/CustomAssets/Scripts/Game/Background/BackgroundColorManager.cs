@@ -37,7 +37,6 @@ public class BackgroundColorManager : MonoBehaviour {
 		colorsIndex = ++colorsIndex % Colors.Length;
 		CurrentPair = Colors[colorsIndex].Tuple;
 		forcedColor = CurrentPair[0];
-		breakColorCycle = true;
 	}
 
 	public void Awake() {
