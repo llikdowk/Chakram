@@ -21,6 +21,7 @@ namespace Game {
 			BackgroundGenerator.Reset();
 			BackgroundColorManager.Instance.SetNormalScoreMode();
 			isInHighscoreMode = false;
+			TouchHandler.Clear();
 		}
 
 		public static int Score {
@@ -28,14 +29,14 @@ namespace Game {
 			set {
 				score = value;
 				UIManager.Instance.SetScore(score);
-				if (!isInHighscoreMode && score > maxScore && maxScore != -1) {
+				if (!isInHighscoreMode && score > maxScore && maxScore > 1) {
 					BackgroundColorManager.Instance.SetHighScoreMode();
 					isInHighscoreMode = true;
 				}
 			}
 		}
 
-		private static int maxScore = -1;
+		private static int maxScore;
 		private static int score;
 		private static bool isInHighscoreMode;
 	}

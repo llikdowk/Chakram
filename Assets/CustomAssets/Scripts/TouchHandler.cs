@@ -5,9 +5,22 @@ using UnityEngine.Rendering;
 
 public class TouchHandler : MonoBehaviour {
 	private static Material material;
-	private LineRenderer line;
+	private static LineRenderer line;
 	private readonly Vector3[] lineVertices3D = new Vector3[2];
 	private Touch touch;
+	private static bool ignoreTouch;
+	private static bool pressed = false;
+	private static GameObject lineCreated;
+
+	public static void Clear() {
+		line.SetPositions(new Vector3[2] {Vector3.zero, Vector3.zero});
+		if (lineCreated) {
+			Object.Destroy(lineCreated);
+		}
+		if (pressed) {
+			ignoreTouch = true;
+		}
+	}
 
 	public void Awake() {
 		if (!material) {
@@ -74,6 +87,7 @@ public class TouchHandler : MonoBehaviour {
 
 	private void HandleTouch() {
 		if (touch.phase == TouchPhase.Began) {
+			pressed = true;
 			line.enabled = true;
 			Vector3 p = Camera.main.ScreenToWorldPoint(touch.position);
 			p = new Vector3(p.x, p.y, 1.0f);
@@ -88,18 +102,26 @@ public class TouchHandler : MonoBehaviour {
 			OnUpTouch();
 		}
 		else {
-			Vector3 p = Camera.main.ScreenToWorldPoint(touch.position);
-			p = new Vector3(p.x, p.y, 1.0f);
-			lineVertices3D[1] = p;
-			line.SetPositions(lineVertices3D);
+			if (!ignoreTouch) {
+				Vector3 p = Camera.main.ScreenToWorldPoint(touch.position);
+				p = new Vector3(p.x, p.y, 1.0f);
+				lineVertices3D[1] = p;
+				line.SetPositions(lineVertices3D);
+			}
 		}
 	}
 
 	private void OnUpTouch() {
+		if (ignoreTouch) {
+			ignoreTouch = false;
+			return;
+		}
+		pressed = false;
 		GameObject g = new GameObject("^line");
 		var sceneLine = g.AddComponent<Line>();
 		sceneLine.Create(line);
 		sceneLine.MoveWithScene = true;
 		line.enabled = false;
+		lineCreated = g;
 	}
 }
