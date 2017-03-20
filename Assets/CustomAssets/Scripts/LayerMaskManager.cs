@@ -4,7 +4,7 @@ using UnityEngine;
 
 public enum Layer {
 	Default, TransparentFX, IgnoreRaycast, Water, UI, // default
-	Player, Line // custom
+	Player, Line, Start // custom
 }
 
 public class LayerMaskManager {

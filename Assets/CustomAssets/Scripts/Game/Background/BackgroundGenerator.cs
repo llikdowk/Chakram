@@ -1,22 +1,29 @@
 ﻿
 using Assets.CustomAssets.Scripts.DataStructures;
-using C5;
 using UnityEngine;
 
 namespace Game.Background {
 	public class BackgroundGenerator : MonoBehaviour {
+		public static bool PlayerInSafeZone = true;
 		private static readonly C5.CircularQueue<Transform> instancedPrefabs = new C5.CircularQueue<Transform>(4);
 		private static int generatedCount = 0;
 		private const float offsetY = 19.2f;
 		private static MarkovChain<Transform> fgChain;
 		private static MarkovChain<Transform> bgChain;
+		private Transform blockStart;
 
 		private void GenerateBlock() {
 			Transform block = new GameObject("^block" + generatedCount).transform;
 			Transform bg = bgChain.Next();
 			bg.parent = block;
 			bg.localPosition = Vector3.zero;
-			Transform fg = fgChain.Next();
+			Transform fg;
+			if (PlayerInSafeZone) {
+				fg = Object.Instantiate(blockStart);
+			}
+			else {
+				fg = fgChain.Next();
+			}
 			fg.parent = block;
 			fg.localPosition = Vector3.zero;
 
@@ -53,7 +60,8 @@ namespace Game.Background {
 
 			fgChain.ConnectAllNoCycles();
 			MarkovChain<Transform>.Node prevRoot = fgChain.Root;
-			fgChain.Root = new MarkovChain<Transform>.Node(Resources.Load<Transform>("Prefabs/blocks/blockEmpty"));
+			blockStart = Resources.Load<Transform>("Prefabs/blocks/blockStart");
+			fgChain.Root = new MarkovChain<Transform>.Node(blockStart);
 			fgChain.Root.Neighbours.Add(prevRoot);
 			fgChain.Current = fgChain.Root;
 
