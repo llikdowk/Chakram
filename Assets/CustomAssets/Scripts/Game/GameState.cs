@@ -1,5 +1,4 @@
 ﻿
-using Assets.CustomAssets.Scripts.Game;
 using Game.Background;
 using UnityEngine;
 
@@ -10,7 +9,7 @@ namespace Game {
 			UIManager.Instance.Flash();
 			if (score > maxScore) {
 				maxScore = score;
-				PlayerStatistics.HighScore = maxScore;
+				PlayerStatistics.Instance.HighScore = maxScore;
 				UIManager.Instance.SetMaxScore(maxScore);
 			}
 			score = 0;
@@ -23,6 +22,7 @@ namespace Game {
 			isInHighscoreMode = false;
 			TouchHandler.Clear();
 			Player.Instance.start = true;
+			PlayerStatistics.Instance.Save();
 		}
 
 		public static int Score {
