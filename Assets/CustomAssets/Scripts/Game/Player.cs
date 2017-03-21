@@ -51,6 +51,7 @@ namespace Game {
 			bool fallback = false;
 			for (int i = 0; i < ncol; ++i) {
 				Collider2D hitCollider = collisionsFound[i];
+				if (hitCollider.gameObject.layer == LayerMaskManager.Get(Layer.UI)) continue;
 				if (hitCollider.gameObject.layer == lineLayer) {
 					Line line = hitCollider.gameObject.GetComponent<Line>();
 					Vector3 p = line.Vertices[0];

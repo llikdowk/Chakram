@@ -6,6 +6,8 @@ namespace Game {
 	public static class GameState {
 		private static readonly GameObject start = GameObject.Find("$start");
 		public static void GameOver() {
+			TouchHandler.Clear();
+			UIManager.Instance.TutorialRestart();
 			UIManager.Instance.Flash();
 			++PlayerStatistics.Instance.Crashes;
 			if (score > maxScore) {
@@ -21,7 +23,6 @@ namespace Game {
 			BackgroundGenerator.Reset();
 			BackgroundColorManager.Instance.SetNormalScoreMode();
 			isInHighscoreMode = false;
-			TouchHandler.Clear();
 			Player.Instance.start = true;
 			PlayerStatistics.Instance.Save();
 		}

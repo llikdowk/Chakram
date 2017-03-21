@@ -11,6 +11,7 @@ public class TouchHandler : MonoBehaviour {
 	private static bool ignoreTouch;
 	private static bool pressed = false;
 	private static GameObject lineCreated;
+	private static bool inTutorial = false;
 
 	public static void Clear() {
 		line.SetPositions(new Vector3[2] {Vector3.zero, Vector3.zero});
@@ -90,10 +91,17 @@ public class TouchHandler : MonoBehaviour {
 			pressed = true;
 			line.enabled = true;
 			Vector3 p = Camera.main.ScreenToWorldPoint(touch.position);
+			Ray ray = new Ray(p, Vector3.forward);
+			if (Physics.Raycast(ray, 100, 1 << LayerMaskManager.Get(Layer.UI))) {
+				UIManager.Instance.TutorialShowEnd();
+				inTutorial = true;
+			}
+
 			p = new Vector3(p.x, p.y, 1.0f);
 			lineVertices3D[0] = p;
 			lineVertices3D[1] = p;
 			line.SetPositions(lineVertices3D);
+
 		}
 		else if (touch.phase == TouchPhase.Ended) {
 			OnUpTouch();
@@ -117,11 +125,26 @@ public class TouchHandler : MonoBehaviour {
 			return;
 		}
 		pressed = false;
-		GameObject g = new GameObject("^line");
-		var sceneLine = g.AddComponent<Line>();
-		sceneLine.Create(line);
-		sceneLine.MoveWithScene = true;
-		line.enabled = false;
-		lineCreated = g;
+
+		if (inTutorial) {
+			Vector3 p = Camera.main.ScreenToWorldPoint(touch.position);
+			Ray ray = new Ray(p, Vector3.forward);
+			if (Physics.Raycast(ray, 100, 1 << LayerMaskManager.Get(Layer.UI))) {
+				UIManager.Instance.TutorialRestart();
+			}
+			else {
+				UIManager.Instance.TutorialHide();
+				inTutorial = false;
+				OnUpTouch();
+			}
+		}
+		else {
+			GameObject g = new GameObject("^line");
+			var sceneLine = g.AddComponent<Line>();
+			sceneLine.Create(line);
+			sceneLine.MoveWithScene = true;
+			line.enabled = false;
+			lineCreated = g;
+		}
 	}
 }
