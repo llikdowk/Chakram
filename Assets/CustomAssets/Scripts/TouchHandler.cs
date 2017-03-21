@@ -96,6 +96,9 @@ public class TouchHandler : MonoBehaviour {
 				UIManager.Instance.TutorialShowEnd();
 				inTutorial = true;
 			}
+			else {
+				inTutorial = false;
+			}
 
 			p = new Vector3(p.x, p.y, 1.0f);
 			lineVertices3D[0] = p;
