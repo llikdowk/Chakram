@@ -30,7 +30,7 @@ Material:
       second: 0.055
     - first:
         name: _Radius
-      second: 0.27
+      second: 0.275
     - first:
         name: _Thickness
       second: 0.371
