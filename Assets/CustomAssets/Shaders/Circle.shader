@@ -11,6 +11,8 @@
           Pass {
               Tags { "RenderType"="Transparent" "Queue" = "Transparent" }
               Blend SrcAlpha OneMinusSrcAlpha
+              ZWrite Off
+              ZTest Always
               CGPROGRAM
              
               #pragma vertex vert
