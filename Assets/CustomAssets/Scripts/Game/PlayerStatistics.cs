@@ -9,24 +9,21 @@ namespace Game {
 			set {
 				highScore = value;
 				if (highScore >= 10) {
-					nextMedal = 1;
+					currentMedal = 1;
 				}
 				if (highScore >= 20) {
-					nextMedal = 2;
+					currentMedal = 2;
 				}
 				if (highScore >= 50) {
-					nextMedal = 3;
-				}
-				if (highScore >= 100) {
-					nextMedal = 4;
+					currentMedal = 3;
 				}
 
-				Debug.Log("Current MEdal = " + nextMedal + " value= " + medals[nextMedal]);
+				Debug.Log("Current MEdal = " + currentMedal + " value= " + medals[currentMedal]);
 			}
 		}
 		private int highScore = -1;
 		private readonly string[] medals = new string[5];
-		private int nextMedal = 0;
+		private int currentMedal = 0;
 		public int Crashes = 0;
 
 		public static PlayerStatistics Instance {
@@ -50,13 +47,13 @@ namespace Game {
 		}
 
 		public void Load() {
-			nextMedal = PlayerPrefs.GetInt("NextMedal");
+			currentMedal = PlayerPrefs.GetInt("NextMedal");
 			HighScore = PlayerPrefs.GetInt("HighScore");
 			Crashes = PlayerPrefs.GetInt("Crashes");
 		}
 
 		public void Save() {
-			PlayerPrefs.SetInt("NextMedal", nextMedal);
+			PlayerPrefs.SetInt("NextMedal", currentMedal);
 			PlayerPrefs.SetInt("HighScore", HighScore);
 			PlayerPrefs.SetInt("Crashes", Crashes);
 		}
